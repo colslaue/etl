@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+      PYTHONPATH: /opt/airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  webserver:
+    image: apache/airflow:latest
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN
+      - AIRFLOW__CORE__EXECUTOR
+      - AIRFLOW__WEBSERVER__SECRET_KEY
+    env_file:
+      - .env
+    volumes:
+      - ./dags:/opt/airflow/dags
+    ports:
+      - "9090:8080"
+    command: webserver
+
+  scheduler:
+    image: apache/airflow:latest
+    restart: always
+    depends_on:
+      - webserver
+    environment:
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN
+      - AIRFLOW__CORE__EXECUTOR
+      - AIRFLOW__WEBSERVER__SECRET_KEY
+    env_file:
+      - .env
+    volumes:
+      - ./dags:/opt/airflow/dags
+    command: scheduler
+
+volumes:
+  postgres_data:

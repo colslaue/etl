@@ -18,10 +18,15 @@ services:
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN
       - AIRFLOW__CORE__EXECUTOR
       - AIRFLOW__WEBSERVER__SECRET_KEY
+      - _PIP_ADDITIONAL_REQUIREMENTS=hubspot-api-client
     env_file:
       - .env
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./connectors:/opt/airflow/connectors
+      - ./utils:/opt/airflow/utils
+      - ./config.py:/opt/airflow/config.py
+      - ./bq_credentials.json:/opt/airflow/bq_credentials.json
     ports:
       - "9090:8080"
     command: webserver
@@ -35,10 +40,15 @@ services:
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN
       - AIRFLOW__CORE__EXECUTOR
       - AIRFLOW__WEBSERVER__SECRET_KEY
+      - _PIP_ADDITIONAL_REQUIREMENTS=hubspot-api-client
     env_file:
       - .env
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./connectors:/opt/airflow/connectors
+      - ./utils:/opt/airflow/utils
+      - ./config.py:/opt/airflow/config.py
+      - ./bq_credentials.json:/opt/airflow/bq_credentials.json
     command: scheduler
 
 volumes:

@@ -1,4 +1,5 @@
 from airflow.decorators import dag
+from config import CONFIG
 from datetime import datetime, timedelta
 from utils.bigquery_utils import load_table_from_json
 from utils.hubspot_utils import fetch_deals, flatten_deals
@@ -20,6 +21,6 @@ default_args = {
 def load_deals():
     deal_data = fetch_deals()
     flattened_data = flatten_deals(deal_data)
-    load_table_from_json(flattened_data, destination="airflow-test-453214.colslaue.test123")
+    load_table_from_json(flattened_data, destination=f"{CONFIG.BIGQUERY_PROJECT_ID}.{CONFIG.BIGQUERY_HUBSPOT_DATASET}.deal")
 
 load_deals()
